@@ -3,17 +3,23 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
   Put,
-  Request,
+  Res,
   UsePipes,
 } from '@nestjs/common';
-import { SchemaValidationPipe } from '../../pipes/schemaValidation.pipe';
+import { Response } from 'express';
+import {
+  ParseIntPipe,
+  SchemaValidationPipe,
+} from '../../pipes/schemaValidation.pipe';
 import { SupplierDto } from './dto/supplier.dto';
+import { Errors } from './errors';
 import { Supplier } from './supplier.entity';
-import { supplierSchema } from './supplier.schema';
+import { supplierSchema, supplierSchemaUpdate } from './supplier.schema';
 import { SupplierService } from './supplier.service';
 
 @Controller('supplier')
@@ -22,15 +28,20 @@ export class SupplierController {
 
   @Get()
   async findAll() {
-    return await this.supplierService.findAll();
+    const suppliers = await this.supplierService.findAll();
+    if (!suppliers.length) {
+      throw new NotFoundException('No existen proveedores');
+    }
+
+    return suppliers;
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Supplier> {
+  async findOne(@Param('id') id: number): Promise<Supplier> {
     const supplier = await this.supplierService.findById(id);
 
     if (!supplier) {
-      throw new NotFoundException('This supplier doesnt exist');
+      throw new NotFoundException('No existe el proveedor');
     }
 
     return supplier;
@@ -38,23 +49,38 @@ export class SupplierController {
 
   @UsePipes(new SchemaValidationPipe(supplierSchema))
   @Post()
-  async create(@Body() supplier: SupplierDto): Promise<Supplier> {
-    return await this.supplierService.create(supplier);
+  async create(
+    @Body() supplier: SupplierDto,
+    @Res() res: Response,
+  ): Promise<Supplier | any> {
+    const create = await this.supplierService.create(supplier);
+
+    if (create.code) {
+      return res.status(HttpStatus.NOT_FOUND).json({ message: create.message });
+    }
+    return res.status(HttpStatus.OK).json(create);
   }
 
   @Put(':id')
   async update(
-    @Param('id') id: number,
-    @Body(new SchemaValidationPipe(supplierSchema)) supplier: SupplierDto,
-  ): Promise<Supplier> {
-    const { numberOfAffectedRows, updatedPost } =
-      await this.supplierService.update(id, supplier);
+    @Param('id', new ParseIntPipe())
+    id: number,
+    @Body(new SchemaValidationPipe(supplierSchemaUpdate))
+    supplier: SupplierDto | any,
+    @Res() res: Response,
+  ): Promise<Supplier | any> {
+    try {
+      const { code, message, data } = await this.supplierService.update(
+        id,
+        supplier,
+      );
 
-    if (numberOfAffectedRows === 0) {
-      throw new NotFoundException('This supplier doesnt exist');
+      return res.status(code).json({ message, data });
+    } catch (error) {
+      const errorValidation = new Errors(error);
+      const { code, message } = errorValidation.messageError();
+      res.status(code).json({ message });
     }
-
-    return updatedPost;
   }
 
   @Delete(':id')

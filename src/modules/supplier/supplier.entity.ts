@@ -31,9 +31,6 @@ export class Supplier extends Model<Supplier> {
   })
   contactPhone: string;
 
-  @ForeignKey(() => Account)
-  accountId: string;
-
   @HasMany(() => Account)
-  accounts: Account[];
+  accounts?: Account[];
 }

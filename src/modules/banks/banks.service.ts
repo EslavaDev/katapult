@@ -19,7 +19,7 @@ export class BanksService {
 
   async findById(id: string): Promise<Bank> {
     return await this.bankRepository.findOne({
-      where: { id },
+      where: { name: id },
     });
   }
 
@@ -27,13 +27,13 @@ export class BanksService {
     const [numberOfAffectedRows, [updatedPost]] =
       await this.bankRepository.update(
         { ...data },
-        { where: { id }, returning: true },
+        { where: { name: id }, returning: true },
       );
 
     return { numberOfAffectedRows, updatedPost };
   }
 
   async delete(id: string) {
-    return await this.bankRepository.destroy({ where: { id } });
+    return await this.bankRepository.destroy({ where: { name: id } });
   }
 }

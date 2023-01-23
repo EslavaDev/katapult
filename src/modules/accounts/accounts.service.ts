@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ACCOUNTS_REPOSITORY } from '../../core/constants';
+import { Bank } from '../banks/bank.entity';
+import { BanksService } from '../banks/banks.service';
 import { Account } from './accounts.entity';
 import { AccountDto } from './dto/accounts.dto';
 
@@ -10,7 +12,7 @@ export class AccountsService {
     private readonly repository_account: typeof Account,
   ) {}
 
-  async create(account: AccountDto): Promise<Account> {
+  async create(account: AccountDto): Promise<Account | any> {
     return await this.repository_account.create(account);
   }
 
@@ -20,15 +22,15 @@ export class AccountsService {
 
   async findById(id: string): Promise<Account> {
     return await this.repository_account.findOne({
-      where: { id },
+      where: { accountNumber: id },
     });
   }
 
-  async update(id: string, data) {
+  async update(id: number, data) {
     const [numberOfAffectedRows, [updatedPost]] =
       await this.repository_account.update(
         { ...data },
-        { where: { id }, returning: true },
+        { where: { supplierAccount: id }, returning: true },
       );
 
     return { numberOfAffectedRows, updatedPost };

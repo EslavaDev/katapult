@@ -33,7 +33,7 @@ export class BanksController {
     const bank = await this.banksService.findById(id);
 
     if (!bank) {
-      throw new NotFoundException('No existe ningun banco con ese id');
+      throw new NotFoundException('No existe ningun banco con ese nombre');
     }
 
     return bank;
@@ -53,7 +53,7 @@ export class BanksController {
       await this.banksService.update(id, post);
 
     if (numberOfAffectedRows === 0) {
-      throw new NotFoundException('No existe ningun banco con ese id');
+      throw new NotFoundException('No existe ningun banco con ese nombre');
     }
 
     return updatedPost;
@@ -63,7 +63,7 @@ export class BanksController {
   async remove(@Param('id') id: string) {
     const deleted = await this.banksService.delete(id);
     if (deleted === 0) {
-      throw new NotFoundException('No existe ningun banco con ese id');
+      throw new NotFoundException('No existe ningun banco con ese nombre');
     }
 
     return 'Successfully deleted';

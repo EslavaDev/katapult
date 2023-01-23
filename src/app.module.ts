@@ -4,7 +4,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './core/database/database.module';
 import { BanksModule } from './modules/banks/banks.module';
-import { BanksService } from './modules/banks/banks.service';
 import { SupplierService } from './modules/supplier/supplier.service';
 import { AccountsService } from './modules/accounts/accounts.service';
 import { AccountsModule } from './modules/accounts/accounts.module';
@@ -19,6 +18,6 @@ import { SupplierModule } from './modules/supplier/supplier.module';
     SupplierModule,
   ],
   controllers: [AppController],
-  providers: [AppService, BanksService, SupplierService, AccountsService],
+  providers: [AppService],
 })
 export class AppModule {}
