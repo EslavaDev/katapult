@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Account } from 'src/modules/accounts/accounts.entity';
-import { Bank } from 'src/modules/banks/bank.entity';
-import { Supplier } from 'src/modules/supplier/supplier.entity';
+import { Account } from '../../modules/accounts/accounts.entity';
+import { Bank } from '../../modules/banks/bank.entity';
+import { Supplier } from '../../modules/supplier/supplier.entity';
 import { SEQUELIZE } from '../constants';
 import { databaseConfig } from './database.config';
 

@@ -1,7 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ACCOUNTS_REPOSITORY } from '../../core/constants';
-import { Bank } from '../banks/bank.entity';
-import { BanksService } from '../banks/banks.service';
 import { Account } from './accounts.entity';
 import { AccountDto } from './dto/accounts.dto';
 

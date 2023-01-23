@@ -7,7 +7,7 @@ import { BanksService } from '../banks/banks.service';
 import { SupplierDto } from './dto/supplier.dto';
 import { Supplier } from './supplier.entity';
 
-interface SupplierInterface {
+interface SuppierInterface {
   name?: string;
   nit?: string;
   contactName: string;
@@ -71,7 +71,7 @@ export class SupplierService {
     });
   }
 
-  async update(id: number, data: SupplierInterface) {
+  async update(id: number, data: SuppierInterface) {
     const findSupplier = await this.findById(id);
     let dataSave;
     if (!findSupplier) {
