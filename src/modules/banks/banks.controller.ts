@@ -10,7 +10,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { Bank } from './bank.entity';
-import { BanksValidationPipe } from './banks.pipe';
+import { SchemaValidationPipe } from '../../pipes/schemaValidation.pipe';
 import { bankSchema } from './banks.schemas';
 import { BanksService } from './banks.service';
 import { BankDto } from './dto/bank.dto';
@@ -38,7 +38,7 @@ export class BanksController {
 
     return bank;
   }
-  @UsePipes(new BanksValidationPipe(bankSchema))
+  @UsePipes(new SchemaValidationPipe(bankSchema))
   @Post()
   async create(@Body() post: BankDto): Promise<Bank> {
     return await this.banksService.create(post);
@@ -47,7 +47,7 @@ export class BanksController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body(new BanksValidationPipe(bankSchema)) post: BankDto,
+    @Body(new SchemaValidationPipe(bankSchema)) post: BankDto,
   ): Promise<Bank> {
     const { numberOfAffectedRows, updatedPost } =
       await this.banksService.update(id, post);

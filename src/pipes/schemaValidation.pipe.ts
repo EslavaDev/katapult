@@ -9,7 +9,7 @@ import { ObjectSchema } from 'joi';
 import { validationOptions } from 'src/utils/errors';
 
 @Injectable()
-export class BanksValidationPipe implements PipeTransform {
+export class SchemaValidationPipe implements PipeTransform {
   constructor(private schema: ObjectSchema) {}
   transform(initialValue: any, metadata: ArgumentMetadata) {
     const { error, value } = this.schema.validate(

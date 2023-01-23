@@ -1,4 +1,11 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  DataType,
+  ForeignKey,
+  HasMany,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import { Account } from '../accounts/accounts.entity';
 
 @Table
@@ -20,8 +27,12 @@ export class Supplier extends Model<Supplier> {
 
   @Column({
     type: DataType.STRING(10),
+    allowNull: true,
   })
   contactPhone: string;
+
+  @ForeignKey(() => Account)
+  accountId: string;
 
   @HasMany(() => Account)
   accounts: Account[];
