@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import * as Joi from 'joi';
 import { SchemaValidationPipe } from './schemaValidation.pipe';
 
 describe('SchemaValidationPipe', () => {
