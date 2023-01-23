@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BANK_REPOSITORY } from 'src/core/constants';
+import { BANK_REPOSITORY } from '../../core/constants';
 import { Bank } from './bank.entity';
 import { BankDto } from './dto/bank.dto';
 

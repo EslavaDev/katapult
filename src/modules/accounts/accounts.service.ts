@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ACCOUNTS_REPOSITORY } from 'src/core/constants';
+import { ACCOUNTS_REPOSITORY } from '../../core/constants';
 import { Account } from './accounts.entity';
 import { AccountDto } from './dto/accounts.dto';
 

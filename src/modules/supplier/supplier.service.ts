@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SUPPLIER_REPOSITORY } from 'src/core/constants';
+import { SUPPLIER_REPOSITORY } from '../../core/constants';
 import { Account } from '../accounts/accounts.entity';
 import { AccountsService } from '../accounts/accounts.service';
 import { SupplierDto } from './dto/supplier.dto';

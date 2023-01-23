@@ -1,0 +1,27 @@
+version: '3.7'
+
+
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build development stage from our dockerfile
+      target: development
+    volumes:
+      - .:/usr/src/app
+    env_file:
+    - .env
+    environment:
+      - DB_HOST=172.19.0.1
+    # Run a command against the development stage of the image
+    command: >
+      bash -c "rm -rf dist &&
+               npm run start:dev"
+    
+    ports:
+      - 3000:3000
+
+networks:
+  default:
+    name: postgrest_default
