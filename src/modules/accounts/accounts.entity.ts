@@ -21,13 +21,13 @@ export class Account extends Model<Account> {
   @Column
   bankName: string;
 
-  @BelongsTo(() => Bank)
+  @BelongsTo(() => Bank, { onDelete: 'CASCADE' })
   bank: Bank;
 
   @ForeignKey(() => Supplier)
   @Column
   supplierAccount: number;
 
-  @BelongsTo(() => Supplier)
+  @BelongsTo(() => Supplier, { onDelete: 'CASCADE' })
   supplier;
 }

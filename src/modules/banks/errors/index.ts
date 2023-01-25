@@ -1,6 +1,6 @@
 interface DatabaseError {
   index: string;
-  parent?: any;
+  name: string;
 }
 
 export class Errors {
@@ -11,18 +11,15 @@ export class Errors {
   }
 
   messageError() {
-    switch (this.error.index || this.error.parent.constraint) {
-      case 'Accounts_bankName_fkey':
-        return {
-          code: 404,
-          message: 'Banco No existe',
-        };
+    const error = this.error.index ?? this.error.name;
 
-      case 'Accounts_pkey':
+    switch (error) {
+      case 'SequelizeUniqueConstraintError':
         return {
           code: 400,
-          message: 'Numero de cuenta ya existe',
+          message: 'Nombre de banco ya registrado',
         };
+
       default:
         return {
           code: 400,

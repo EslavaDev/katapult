@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SUPPLIER_REPOSITORY } from '../../core/constants';
+import { SUPPLIER_REPOSITORY } from 'src/core/constants';
 import { Account } from '../accounts/accounts.entity';
 import { AccountsService } from '../accounts/accounts.service';
 import { Bank } from '../banks/bank.entity';
@@ -10,31 +10,34 @@ import { Supplier } from './supplier.entity';
 interface SuppierInterface {
   name?: string;
   nit?: string;
-  contactName: string;
-  contactPhone: string;
-  bankName: string;
-  accountId: string;
+  contactName?: string;
+  contactPhone?: string;
+  bankName?: string;
+  accountId?: string;
 }
 
 @Injectable()
 export class SupplierService {
+  @Inject(BanksService)
+  private readonly banksService: BanksService;
+
+  @Inject(AccountsService)
+  private readonly accountsService: AccountsService;
+
   constructor(
     @Inject(SUPPLIER_REPOSITORY)
     private readonly repository_supplier: typeof Supplier,
   ) {}
 
   async create(supplier: SupplierDto): Promise<Supplier | any> {
-    const banksService = new BanksService(Bank);
-    const accountsService = new AccountsService(Account);
-
-    const findAccount = await accountsService.findById(supplier.accountId);
+    const findAccount = await this.accountsService.findById(supplier.accountId);
     if (findAccount) {
       return {
-        code: 404,
+        code: 400,
         message: 'Numero de cuenta ya existe',
       };
     }
-    const bank = await banksService.findById(supplier.bankName);
+    const bank = await this.banksService.findById(supplier.bankName);
     if (!bank) {
       return {
         code: 404,
@@ -45,9 +48,7 @@ export class SupplierService {
     const supplierSave = await this.repository_supplier.create(supplier);
     let resolve;
     if (supplier.bankName) {
-      const accountService = new AccountsService(Account);
-
-      const accountCreate = await accountService.create({
+      const accountCreate = await this.accountsService.create({
         accountNumber: supplier.accountId,
         bankName: supplier.bankName,
         supplierAccount: supplierSave?.id,
@@ -82,9 +83,7 @@ export class SupplierService {
     }
     const { bankName, accountId, ...rest } = data;
     if (accountId) {
-      const accountService = new AccountsService(Account);
-
-      const { updatedPost } = await accountService.update(id, {
+      const { updatedPost } = await this.accountsService.update(id, {
         bankName,
         accountNumber: data.accountId,
       });

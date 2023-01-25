@@ -1,4 +1,4 @@
-import { BANK_REPOSITORY } from '../../core/constants';
+import { BANK_REPOSITORY } from 'src/core/constants';
 import { Bank } from './bank.entity';
 
 export const banksProviders = [

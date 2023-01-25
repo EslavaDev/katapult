@@ -15,7 +15,7 @@ import { Response } from 'express';
 import {
   ParseIntPipe,
   SchemaValidationPipe,
-} from '../../pipes/schemaValidation.pipe';
+} from '../pipes/schemaValidation.pipe';
 import { SupplierDto } from './dto/supplier.dto';
 import { Errors } from './errors';
 import { Supplier } from './supplier.entity';
@@ -56,9 +56,9 @@ export class SupplierController {
     const create = await this.supplierService.create(supplier);
 
     if (create.code) {
-      return res.status(HttpStatus.NOT_FOUND).json({ message: create.message });
+      res.status(HttpStatus.NOT_FOUND).json({ message: create.message });
     }
-    return res.status(HttpStatus.OK).json(create);
+    res.status(HttpStatus.OK).json(create);
   }
 
   @Put(':id')

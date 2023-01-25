@@ -1,4 +1,4 @@
-import { SUPPLIER_REPOSITORY } from '../../core/constants';
+import { SUPPLIER_REPOSITORY } from 'src/core/constants';
 import { Supplier } from './supplier.entity';
 
 export const supplierProvider = [

@@ -31,6 +31,6 @@ export class Supplier extends Model<Supplier> {
   })
   contactPhone: string;
 
-  @HasMany(() => Account)
+  @HasMany(() => Account, { onDelete: 'CASCADE' })
   accounts?: Account[];
 }

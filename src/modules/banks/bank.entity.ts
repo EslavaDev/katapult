@@ -9,6 +9,6 @@ export class Bank extends Model<Bank> {
   })
   name: string;
 
-  @HasMany(() => Account)
+  @HasMany(() => Account, { onDelete: 'CASCADE' })
   accounts: Account[];
 }

@@ -7,17 +7,23 @@ import {
   Param,
   Post,
   Put,
+  Res,
   UsePipes,
 } from '@nestjs/common';
 import { Bank } from './bank.entity';
-import { SchemaValidationPipe } from '../../pipes/schemaValidation.pipe';
+import { SchemaValidationPipe } from '../pipes/schemaValidation.pipe';
 import { bankSchema } from './banks.schemas';
 import { BanksService } from './banks.service';
 import { BankDto } from './dto/bank.dto';
+import { Response } from 'express';
+import { Errors } from './errors';
 
 @Controller('banks')
 export class BanksController {
-  constructor(private readonly banksService: BanksService) {}
+  constructor(
+    private readonly banksService: BanksService,
+    private error: Errors,
+  ) {}
 
   @Get()
   async findAll() {
@@ -40,23 +46,36 @@ export class BanksController {
   }
   @UsePipes(new SchemaValidationPipe(bankSchema))
   @Post()
-  async create(@Body() post: BankDto): Promise<Bank> {
-    return await this.banksService.create(post);
+  async create(@Body() post: BankDto, @Res() res: Response) {
+    try {
+      res.status(200).json(await this.banksService.create(post));
+    } catch (error) {
+      this.error = new Errors(error);
+      const { code, message } = this.error.messageError();
+      res.status(code).json({ message });
+    }
   }
 
   @Put(':id')
   async update(
     @Param('id') id: string,
     @Body(new SchemaValidationPipe(bankSchema)) post: BankDto,
-  ): Promise<Bank> {
-    const { numberOfAffectedRows, updatedPost } =
-      await this.banksService.update(id, post);
+    @Res() res: Response,
+  ) {
+    try {
+      const { numberOfAffectedRows, updatedPost } =
+        await this.banksService.update(id, post);
 
-    if (numberOfAffectedRows === 0) {
-      throw new NotFoundException('No existe ningun banco con ese nombre');
+      if (numberOfAffectedRows === 0) {
+        throw new NotFoundException('No existe ningun banco con ese nombre');
+      }
+
+      res.status(200).json({ updatedPost });
+    } catch (error) {
+      this.error = new Errors(error);
+      const { code, message } = this.error.messageError();
+      res.status(code).json({ message });
     }
-
-    return updatedPost;
   }
 
   @Delete(':id')
@@ -66,6 +85,6 @@ export class BanksController {
       throw new NotFoundException('No existe ningun banco con ese nombre');
     }
 
-    return 'Successfully deleted';
+    return 'Banco Eliminado';
   }
 }

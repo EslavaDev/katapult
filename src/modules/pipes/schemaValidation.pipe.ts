@@ -7,7 +7,7 @@ import {
   PipeTransform,
 } from '@nestjs/common';
 import { ObjectSchema } from 'joi';
-import { validationOptions } from '../utils/errors';
+import { validationOptions } from 'src/utils/errors';
 
 @Injectable()
 export class SchemaValidationPipe implements PipeTransform {

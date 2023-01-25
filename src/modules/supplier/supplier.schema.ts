@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
+import Joi from 'joi';
 
 export const supplierSchema = Joi.object({
   name: Joi.string().required().messages({
