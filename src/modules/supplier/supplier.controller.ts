@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -21,7 +22,8 @@ import { Errors } from './errors';
 import { Supplier } from './supplier.entity';
 import { supplierSchema, supplierSchemaUpdate } from './supplier.schema';
 import { SupplierService } from './supplier.service';
-
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/middleware/auth/jwtGuard.strategy';
 @Controller('supplier')
 export class SupplierController {
   constructor(private readonly supplierService: SupplierService) {}
@@ -46,7 +48,7 @@ export class SupplierController {
 
     return supplier;
   }
-
+  @UseGuards(JwtAuthGuard)
   @UsePipes(new SchemaValidationPipe(supplierSchema))
   @Post()
   async create(
@@ -61,6 +63,7 @@ export class SupplierController {
     res.status(HttpStatus.OK).json(create);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(
     @Param('id', new ParseIntPipe())
@@ -83,11 +86,12 @@ export class SupplierController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') id: number) {
     const deleted = await this.supplierService.delete(id);
     if (deleted === 0) {
-      throw new NotFoundException('This supplier doesnt exist');
+      throw new NotFoundException('No existe el proveedor');
     }
 
     return 'Successfully deleted';

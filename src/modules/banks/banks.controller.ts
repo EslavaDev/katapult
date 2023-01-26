@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { Bank } from './bank.entity';
@@ -17,7 +18,8 @@ import { BanksService } from './banks.service';
 import { BankDto } from './dto/bank.dto';
 import { Response } from 'express';
 import { Errors } from './errors';
-
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '../../middleware/auth/jwtGuard.strategy';
 @Controller('banks')
 export class BanksController {
   constructor(
@@ -44,6 +46,8 @@ export class BanksController {
 
     return bank;
   }
+
+  @UseGuards(JwtAuthGuard)
   @UsePipes(new SchemaValidationPipe(bankSchema))
   @Post()
   async create(@Body() post: BankDto, @Res() res: Response) {
@@ -56,6 +60,7 @@ export class BanksController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -78,6 +83,7 @@ export class BanksController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const deleted = await this.banksService.delete(id);

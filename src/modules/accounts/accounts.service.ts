@@ -35,4 +35,10 @@ export class AccountsService {
 
     return { numberOfAffectedRows, updatedPost };
   }
+
+  async delete(id: number) {
+    return await this.repository_account.destroy({
+      where: { supplierAccount: id },
+    });
+  }
 }

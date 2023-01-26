@@ -20,18 +20,15 @@ Es una arquitectura mvc utilizando como base nestjs como estructura y como base 
 
 ## Start
 
-Para inicializar el proyecto consta de dos partes el docker de la app y el de la db
-
-#### DB
-
-Para la base de datos ingresamos a la carpeta postgres y ejecutamos el comando
-    sudo docker-compose up -d
+Para inicializar el proyecto solo es correr el comando docker-compose up -d, cambiar el .env
 
 
 
-#### Proyecto
 
-Para correr el proyecto en la carpeta principal ingresamos el comando
-    sudo docker-compose up -d
-y listo 
 
+## Diagrama de base de datos
+
+
+<p align="center">
+  <img src="diagrama.png" width="350" title="hover text">
+</p>

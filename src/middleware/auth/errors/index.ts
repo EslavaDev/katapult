@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { DatabaseError } from 'src/utils/errors';
 
 export class Errors {
@@ -8,18 +9,15 @@ export class Errors {
   }
 
   messageError() {
-    switch (this.error.index || this.error.parent.constraint) {
-      case 'Accounts_bankName_fkey':
-        return {
-          code: 404,
-          message: 'Banco No existe',
-        };
+    const error = this.error.index ?? this.error.parent.constraint;
 
-      case 'Accounts_pkey':
+    switch (error) {
+      case 'Users_pkey':
         return {
           code: 400,
-          message: 'Numero de cuenta ya existe',
+          message: 'Correo ya existente',
         };
+
       default:
         return {
           code: 400,

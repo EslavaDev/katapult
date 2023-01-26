@@ -5,3 +5,11 @@ export const validationOptions: ValidationOptions = {
   allowUnknown: true, // allow unknown keys that will be ignored
   stripUnknown: true, // remove unknown keys from the validated data
 };
+
+export interface DatabaseError {
+  index: string;
+  name: string;
+  parent?: any;
+  status?: number;
+  message?: string;
+}

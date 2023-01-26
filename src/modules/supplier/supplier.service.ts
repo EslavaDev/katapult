@@ -18,15 +18,11 @@ interface SuppierInterface {
 
 @Injectable()
 export class SupplierService {
-  @Inject(BanksService)
-  private readonly banksService: BanksService;
-
-  @Inject(AccountsService)
-  private readonly accountsService: AccountsService;
-
   constructor(
     @Inject(SUPPLIER_REPOSITORY)
     private readonly repository_supplier: typeof Supplier,
+    private readonly accountsService: AccountsService,
+    private readonly banksService: BanksService,
   ) {}
 
   async create(supplier: SupplierDto): Promise<Supplier | any> {
@@ -98,7 +94,23 @@ export class SupplierService {
 
     return { code: 200, data: { ...dataSave, updatedPost } };
   }
-  async delete(id: string) {
-    return await this.repository_supplier.destroy({ where: { id } });
+  async delete(id: number) {
+    const findSupplier = await this.repository_supplier.findOne({
+      where: { id },
+      include: [Account],
+    });
+    if (findSupplier) {
+      if (findSupplier.accounts.length > 0) {
+        const array = await Promise.all(
+          findSupplier.accounts.map(async (e) => {
+            await this.accountsService.delete(e.supplierAccount);
+          }),
+        );
+        return array;
+      }
+
+      return await findSupplier.destroy();
+    }
+    return 0;
   }
 }
